@@ -1,0 +1,34 @@
+<!-- templates/exam.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DevOps Exam</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome, {{ name }}!</h2>
+        <p>Please answer the following 15 questions:</p>
+
+        <form action="/submit" method="POST">
+            <!-- Pass hidden user info -->
+            <input type="hidden" name="name" value="{{ name }}">
+            <input type="hidden" name="gender" value="{{ gender }}">
+            <input type="hidden" name="email" value="{{ email }}">
+
+            {% for q in questions %}
+                <div class="question-box">
+                    <p><b>Q{{ loop.index }}: {{ q['question'] }}</b></p>
+                    {% for opt in q['options'] %}
+                        <input type="radio" name="q{{ loop.index0 }}" value="{{ opt }}" required> {{ opt }}<br>
+                    {% endfor %}
+                    <input type="hidden" name="ans{{ loop.index0 }}" value="{{ q['answer'] }}">
+                </div>
+                <hr>
+            {% endfor %}
+
+            <button type="submit" class="next-btn">Submit Exam</button>
+        </form>
+    </div>
+</body>
+</html>

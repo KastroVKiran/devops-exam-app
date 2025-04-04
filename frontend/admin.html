@@ -1,0 +1,36 @@
+<!-- templates/admin.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard - DevOps Exam</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Admin Dashboard</h2>
+        <img src="{{ url_for('static', filename='admin-banner.jpg') }}" class="banner" alt="Admin Banner">
+        <p>All User Submissions</p>
+
+        <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; margin-top: 20px; text-align: left;">
+            <thead style="background-color: #e0e0e0;">
+                <tr>
+                    <th>Username</th>
+                    <th>Gender</th>
+                    <th>Email</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in records %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td><b>{{ row[3] }}</b> / 15</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

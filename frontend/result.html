@@ -1,0 +1,24 @@
+<!-- templates/result.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Exam Score</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Hi {{ name }}!</h2>
+        <img src="{{ url_for('static', filename='score-banner.jpg') }}" class="banner" alt="Score Banner">
+        <p>Thank you for completing the DevOps Certification Exam.</p>
+
+        <form>
+            <button class="next-btn" onclick="document.getElementById('score-box').style.display='block'; return false;">View Score</button>
+        </form>
+
+        <div id="score-box" style="display:none; margin-top: 20px;">
+            <h3>Your Score: <span style="color: green;">{{ score }} / 15</span></h3>
+            <p>Feel free to try again or check with the admin for detailed answers!</p>
+        </div>
+    </div>
+</body>
+</html>

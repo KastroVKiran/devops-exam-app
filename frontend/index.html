@@ -1,0 +1,32 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DevOps Certification Exam</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>DevOps Certification Exam</h1>
+        <img src="{{ url_for('static', filename='devops-banner.jpg') }}" class="banner" alt="DevOps Banner">
+        
+        <form action="/start" method="POST">
+            <label>Name:</label>
+            <input type="text" name="name" required><br>
+
+            <label>Gender:</label>
+            <select name="gender" required>
+                <option value="">Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+            </select><br>
+
+            <label>Email:</label>
+            <input type="email" name="email" required><br>
+
+            <button type="submit" class="next-btn">Next →</button>
+        </form>
+    </div>
+</body>
+</html>
