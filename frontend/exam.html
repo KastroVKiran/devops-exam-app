@@ -15,6 +15,8 @@
             --card-bg: #ffffff;
             --correct: #10b981;
             --incorrect: #ef4444;
+            --warning: #f59e0b;
+            --danger: #dc2626;
         }
 
         body {
@@ -219,6 +221,21 @@
             font-weight: 600;
         }
 
+        .timer-warning {
+            background: var(--warning);
+        }
+
+        .timer-danger {
+            background: var(--danger);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
         .progress-container {
             width: 100%;
             background: #e5e7eb;
@@ -238,17 +255,40 @@
         .hidden {
             display: none;
         }
+
+        .time-up-alert {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--danger);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .time-up-alert.show {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
+    <div class="time-up-alert" id="time-up-alert">
+        <i class="fas fa-exclamation-triangle"></i> Time's up! Your exam is being submitted automatically.
+    </div>
+
     <div class="exam-container">
         <div class="exam-header">
             <div class="exam-title">DevOps Professional Certification Exam</div>
             <div class="exam-subtitle">Validate your DevOps knowledge and skills</div>
             
-            <div class="timer-container">
+            <div class="timer-container" id="timer-container">
                 <i class="fas fa-clock"></i>
-                <span id="timer">60:00</span>
+                <span id="timer">15:00</span>
             </div>
             
             <div class="progress-container">
@@ -309,18 +349,38 @@
     </div>
 
     <script>
-        // Timer functionality
-        let timeLeft = 60 * 60; // 60 minutes in seconds
+        // Timer functionality - 15 minutes countdown
+        let timeLeft = 15 * 60; // 15 minutes in seconds
         const timerElement = document.getElementById('timer');
+        const timerContainer = document.getElementById('timer-container');
+        const timeUpAlert = document.getElementById('time-up-alert');
         
         function updateTimer() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
             timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             
+            // Change color when time is running low
+            if (timeLeft <= 300) { // 5 minutes left
+                timerContainer.classList.add('timer-warning');
+            }
+            if (timeLeft <= 60) { // 1 minute left
+                timerContainer.classList.remove('timer-warning');
+                timerContainer.classList.add('timer-danger');
+            }
+            
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                document.getElementById('exam-form').submit();
+                // Show time's up alert
+                timeUpAlert.classList.add('show');
+                // Disable all inputs
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.disabled = true;
+                });
+                // Submit the form after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('exam-form').submit();
+                }, 3000);
             } else {
                 timeLeft--;
             }
