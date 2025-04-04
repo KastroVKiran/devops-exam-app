@@ -24,8 +24,8 @@
     }
 
     .heading {
-      font-size: 2.5rem;
-      font-weight: 700;
+      font-size: 2.8rem;
+      font-weight: 800;
       text-align: center;
       margin-bottom: 2rem;
       border-bottom: 3px solid #6366f1;
@@ -33,6 +33,12 @@
       background: linear-gradient(to right, #6366f1, #4f46e5);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     form {
@@ -49,6 +55,12 @@
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 1rem;
+      transition: box-shadow 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      box-shadow: 0 0 5px #6366f1;
     }
 
     button {
@@ -60,6 +72,12 @@
       border-radius: 10px;
       font-size: 1rem;
       cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #4338ca;
+      transform: scale(1.05);
     }
 
     .card {
@@ -71,6 +89,14 @@
       width: 100%;
       max-width: 400px;
       margin-top: 1rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease-in-out;
+    }
+
+    .card.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .info {
@@ -90,7 +116,7 @@
 </head>
 <body>
   <div class="container">
-    <div class="heading">User Information App</div>
+    <div class="heading">DevOps Mock Certification Exam</div>
     <form id="userForm">
       <input type="text" id="name" placeholder="Full Name" required />
       <select id="gender" required>
@@ -100,10 +126,10 @@
         <option value="Other">Other</option>
       </select>
       <input type="email" id="email" placeholder="Email ID" required />
-      <button type="submit">Submit</button>
+      <button type="submit">Register and Proceed</button>
     </form>
 
-    <div id="output" class="card" style="display: none;">
+    <div id="output" class="card">
       <div class="info" id="displayName"></div>
       <div class="info" id="displayGender"></div>
       <div class="info" id="displayEmail"></div>
@@ -130,7 +156,13 @@
       genderDisplay.textContent = `Gender: ${gender}`;
       emailDisplay.textContent = `Email: ${email}`;
 
-      output.style.display = 'block';
+      output.classList.add("show");
+
+      // Delay before redirecting to the questions page
+      setTimeout(() => {
+        // Optional: Pass data via query params or sessionStorage if needed
+        window.location.href = "questions.html";
+      }, 2000); // 2 seconds to show the card briefly
     });
   </script>
 </body>
