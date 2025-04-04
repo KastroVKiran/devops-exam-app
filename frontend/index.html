@@ -1,17 +1,50 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>DevOps Mock Certification Exam</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --text: #2d3748;
+            --text-light: #6b7280;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right, #f0f2f5, #e0e7ff);
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            line-height: 1.6;
         }
 
         .container {
@@ -21,163 +54,347 @@
             justify-content: center;
             align-items: center;
             padding: 2rem;
-            animation: fadeIn 1s ease-in-out;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            max-width: 800px;
+        }
+
+        .exam-badge {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            display: inline-block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.15);
+            animation: float 4s ease-in-out infinite;
         }
 
         h1 {
             font-size: 2.8rem;
             font-weight: 800;
-            text-align: center;
-            margin-bottom: 2rem;
-            border-bottom: 3px solid #6366f1;
-            padding-bottom: 0.5rem;
-            background: linear-gradient(to right, #6366f1, #4f46e5);
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: fadeInDown 1.2s ease-out;
+            line-height: 1.2;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .exam-features {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-            100% { transform: scale(1); }
+        .feature {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.15);
+        }
+
+        .feature i {
+            color: var(--primary);
+            font-size: 1.2rem;
         }
 
         form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: white;
-            padding: 2rem 3rem;
-            border-radius: 1.5rem;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 400px;
-            transition: transform 0.3s ease;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
         form:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.15);
+        }
+
+        form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark), var(--primary));
+            background-size: 200% 200%;
+            animation: gradientFlow 3s ease infinite;
+        }
+
+        .input-group {
+            width: 100%;
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            transition: all 0.3s ease;
         }
 
         label {
-            margin: 0.75rem 0 0.25rem;
+            display: block;
+            margin-bottom: 0.6rem;
             font-weight: 600;
-            color: #374151;
-            width: 100%;
+            color: var(--text);
+            font-size: 0.95rem;
         }
 
         input, select {
-            margin-bottom: 1rem;
-            padding: 0.75rem;
+            padding: 0.9rem 1rem 0.9rem 45px;
             width: 100%;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
             font-size: 1rem;
-            transition: box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
+            color: var(--text);
         }
 
         input:focus, select:focus {
             outline: none;
-            box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
-            border-color: #6366f1;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(165, 180, 252, 0.3);
+            background-color: white;
+        }
+
+        input:focus + i, select:focus + i {
+            color: var(--primary);
+            transform: translateY(-50%) scale(1.1);
         }
 
         .next-btn {
-            margin-top: 1rem;
-            padding: 0.75rem 1.5rem;
-            background-color: #4f46e5;
+            margin-top: 1.5rem;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
             color: white;
             border: none;
             border-radius: 10px;
             font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.3s ease;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
             position: relative;
             overflow: hidden;
         }
 
-        .next-btn:hover {
-            background-color: #4338ca;
-            transform: scale(1.05);
+        .next-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 20%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 80%
+            );
+            transform: rotate(30deg);
+            transition: all 0.7s ease;
         }
 
-        .next-btn::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -75%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(
-                120deg,
-                rgba(255, 255, 255, 0.3),
-                rgba(255, 255, 255, 0.6),
-                rgba(255, 255, 255, 0.3)
-            );
-            transform: skewX(-25deg);
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
         }
 
         .next-btn:hover::after {
-            animation: shine 0.8s forwards;
+            left: 100%;
         }
 
-        @keyframes shine {
-            100% {
-                left: 125%;
-            }
+        .next-btn i {
+            transition: transform 0.3s ease;
+        }
+
+        .next-btn:hover i {
+            transform: translateX(5px);
         }
 
         .footer {
+            margin-top: 4rem;
             text-align: center;
-            padding: 1rem;
+            color: var(--text-light);
             font-size: 0.9rem;
-            color: #555;
-            background-color: #f3f4f6;
-            animation: fadeIn 1.2s ease-in;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            animation: fadeIn 1s ease-out 0.3s both;
         }
 
         .footer i {
-            color: #6366f1;
-            margin-right: 5px;
+            color: var(--primary);
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            border-radius: 50%;
+            background: linear-gradient(var(--primary), var(--primary-dark));
+        }
+
+        .shape-1 {
+            width: 150px;
+            height: 150px;
+            top: -50px;
+            right: -50px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .shape-2 {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            left: -30px;
+            animation: float 6s ease-in-out infinite 2s;
+        }
+
+        .shape-3 {
+            width: 60px;
+            height: 60px;
+            top: 30%;
+            left: 20%;
+            animation: float 5s ease-in-out infinite 1s;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            form {
+                padding: 2rem 1.5rem;
+            }
+            
+            .exam-features {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>DevOps Mock Certification Exam</h1>
-        
-        <form action="/start" method="POST">
-            <label>Name:</label>
-            <input type="text" name="name" required><br>
-
-            <label>Gender:</label>
-            <select name="gender" required>
-                <option value="">Select Gender</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-            </select><br>
-
-            <label>Email:</label>
-            <input type="email" name="email" required><br>
-
-            <button type="submit" class="next-btn">Next →</button>
-        </form>
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
     </div>
 
-    <div class="footer">
-        <i>⚙️</i> Developed by <strong>KASTRO</strong>
+    <div class="container">
+        <div class="header">
+            <div class="exam-badge">
+                <i class="fas fa-shield-alt"></i> Official Mock Exam
+            </div>
+            <h1>DevOps Professional Certification</h1>
+            <p>Validate your expertise with our comprehensive assessment covering CI/CD, Cloud Infrastructure, Containerization, and more</p>
+            
+            <div class="exam-features">
+                <div class="feature">
+                    <i class="fas fa-clock"></i>
+                    <span>Timed Assessment</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Real-world Scenarios</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Performance Analytics</span>
+                </div>
+            </div>
+        </div>
+        
+        <form action="/start" method="POST">
+            <div class="input-group">
+                <label for="name">Full Name</label>
+                <i class="fas fa-user"></i>
+                <input type="text" id="name" name="name" placeholder="John Doe" required>
+            </div>
+
+            <div class="input-group">
+                <label for="gender">Gender</label>
+                <i class="fas fa-venus-mars"></i>
+                <select id="gender" name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                    <option>Prefer not to say</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" name="email" placeholder="your@email.com" required>
+            </div>
+
+            <button type="submit" class="next-btn">
+                <i class="fas fa-play"></i> Start Certification Exam
+            </button>
+        </form>
+
+        <div class="footer">
+            <i class="fas fa-code-branch"></i>
+            <span>Developed by KASTRO | DevOps Education Platform</span>
+        </div>
     </div>
 </body>
 </html>
