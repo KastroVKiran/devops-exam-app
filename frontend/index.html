@@ -145,24 +145,41 @@
     const genderDisplay = document.getElementById('displayGender');
     const emailDisplay = document.getElementById('displayEmail');
 
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
       const name = document.getElementById('name').value;
       const gender = document.getElementById('gender').value;
       const email = document.getElementById('email').value;
 
+      // Show the info card
       nameDisplay.textContent = `Full Name: ${name}`;
       genderDisplay.textContent = `Gender: ${gender}`;
       emailDisplay.textContent = `Email: ${email}`;
-
       output.classList.add("show");
 
-      // Delay before redirecting to the questions page
+      // Send data to backend
+      try {
+        const res = await fetch('http://localhost:5000/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, gender, email })
+        });
+
+        if (!res.ok) {
+          alert('Failed to register. Please try again.');
+          return;
+        }
+      } catch (error) {
+        console.error(error);
+        alert('Server error. Please check your backend.');
+        return;
+      }
+
+      // Redirect to questions page after 2 seconds
       setTimeout(() => {
-        // Optional: Pass data via query params or sessionStorage if needed
-        window.location.href = "questions.html";
-      }, 2000); // 2 seconds to show the card briefly
+        window.location.href = 'questions.html';
+      }, 2000);
     });
   </script>
 </body>
