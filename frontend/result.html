@@ -27,6 +27,9 @@
             margin: 0;
             padding: 0;
             padding-top: 60px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .result-container {
@@ -37,6 +40,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             text-align: center;
+            flex: 1;
         }
 
         .result-header {
@@ -47,15 +51,6 @@
             font-size: 2rem;
             color: var(--primary);
             margin-bottom: 0.5rem;
-        }
-
-        .result-banner {
-            width: 100%;
-            max-height: 300px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin: 1rem 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .result-message {
@@ -74,39 +69,47 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             margin: 1rem 0;
         }
 
         .next-btn:hover {
             background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .next-btn:active {
+            transform: translateY(-1px);
         }
 
         .next-btn i {
             margin-left: 0.5rem;
-            transition: transform 0.2s ease;
+            transition: transform 0.3s ease;
         }
 
         .next-btn:hover i {
-            transform: translateX(3px);
+            transform: translateX(5px);
         }
 
         .score-box {
             background: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 2rem;
             margin-top: 2rem;
             border: 1px solid #e5e7eb;
             display: none;
-            animation: fadeIn 0.5s ease-out;
+            animation: fadeIn 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
         }
 
         .score-display {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
             margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .score-pass {
@@ -120,23 +123,47 @@
         .score-message {
             font-size: 1.2rem;
             margin: 1rem 0;
+            animation: pulse 2s infinite;
+        }
+
+        .emoji-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: bounce 1s infinite alternate;
         }
 
         .progress-ring {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             margin: 0 auto 1.5rem;
+            transition: all 0.5s ease;
+        }
+
+        .progress-ring:hover {
+            transform: scale(1.1);
         }
 
         .progress-ring__circle {
-            transition: stroke-dashoffset 0.5s;
+            transition: stroke-dashoffset 1s ease-out;
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         .result-footer {
@@ -148,12 +175,40 @@
         .certificate-link {
             display: inline-block;
             margin-top: 1rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .certificate-link:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.2);
+        }
+
+        .certificate-link i {
+            margin-right: 0.5rem;
+        }
+
+        .developer-credit {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        .developer-credit a {
             color: var(--primary);
             text-decoration: none;
             font-weight: 600;
         }
 
-        .certificate-link:hover {
+        .developer-credit a:hover {
             text-decoration: underline;
         }
     </style>
@@ -162,12 +217,11 @@
     <div class="result-container">
         <div class="result-header">
             <h1 class="result-title">Exam Results</h1>
-            <img src="{{ url_for('static', filename='score-banner.jpg') }}" class="result-banner" alt="Results Banner">
         </div>
 
         <div class="result-message">
             <p>Hi <strong>{{ name }}</strong>!</p>
-            <p>Thank you for completing the DevOps Certification Exam.</p>
+            <p>Thank you for completing the DevOps Mock Certification Exam.</p>
         </div>
 
         <button class="next-btn" onclick="showScore(); return false;">
@@ -175,26 +229,40 @@
         </button>
 
         <div id="score-box" class="score-box">
-            <svg class="progress-ring" viewBox="0 0 120 120">
-                <circle class="progress-ring__circle" stroke="#e5e7eb" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+            {% if score >= 12 %}
+                <div class="emoji-icon">🎉</div>
+            {% elif score >= 9 %}
+                <div class="emoji-icon">😊</div>
+            {% else %}
+                <div class="emoji-icon">😔</div>
+            {% endif %}
+
+            <svg class="progress-ring" viewBox="0 0 100 100">
+                <circle class="progress-ring__circle" stroke="#e5e7eb" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"/>
                 <circle class="progress-ring__circle" stroke="{{ 'var(--success)' if score >= 9 else 'var(--danger)' }}" 
-                        stroke-width="8" stroke-dasharray="{{ (score/15)*330 }} 330" 
-                        fill="transparent" r="52" cx="60" cy="60"/>
+                        stroke-width="8" stroke-dasharray="{{ (score/15)*251.2 }} 251.2" 
+                        fill="transparent" r="40" cx="50" cy="50"/>
             </svg>
 
             <div class="score-display {{ 'score-pass' if score >= 9 else 'score-fail' }}">
+                <i class="fas {{ 'fa-trophy' if score >= 12 else 'fa-medal' if score >= 9 else 'fa-heart-broken' }}"></i>
                 {{ score }} / 15
             </div>
 
             <div class="score-message">
-                {% if score >= 9 %}
-                    <p><i class="fas fa-check-circle" style="color: var(--success);"></i> Congratulations! You passed the exam!</p>
+                {% if score >= 12 %}
+                    <p><i class="fas fa-check-circle" style="color: var(--success);"></i> Outstanding! You're a DevOps expert!</p>
+                    <p class="encouragement">Your hard work has paid off brilliantly!</p>
+                {% elif score >= 9 %}
+                    <p><i class="fas fa-check" style="color: var(--success);"></i> Congratulations! You passed the exam!</p>
+                    <p class="encouragement">You're on the right track to mastery!</p>
                 {% else %}
-                    <p><i class="fas fa-exclamation-circle" style="color: var(--danger);"></i> Keep practicing! You can try again.</p>
+                    <p><i class="fas fa-exclamation-circle" style="color: var(--danger);"></i> Keep practicing!</p>
+                    <p class="encouragement">Every expert was once a beginner. Try again!</p>
                 {% endif %}
             </div>
 
-            <p>You scored {{ (score/15)*100|round(1) }}% on the exam.</p>
+            <p>You scored <strong>{{ (score/15)*100|round(1) }}%</strong> on the exam.</p>
             
             {% if score >= 12 %}
                 <a href="#" class="certificate-link">
@@ -209,19 +277,39 @@
         </div>
     </div>
 
+    <div class="developer-credit">
+        Developed by <a href="#" target="_blank">KASTRO</a>
+    </div>
+
     <script>
         function showScore() {
             const scoreBox = document.getElementById('score-box');
-            scoreBox.style.display = 'block';
-            document.querySelector('.next-btn').style.display = 'none';
+            const button = document.querySelector('.next-btn');
             
-            // Scroll to score box smoothly
-            scoreBox.scrollIntoView({ behavior: 'smooth' });
+            scoreBox.style.display = 'block';
+            button.style.transform = 'scale(0.9)';
+            button.style.opacity = '0';
+            
+            setTimeout(() => {
+                button.style.display = 'none';
+                scoreBox.scrollIntoView({ behavior: 'smooth' });
+            }, 300);
         }
 
         // Show score immediately if coming from exam submission
         if (window.location.hash === '#score') {
             showScore();
+        }
+
+        // Add hover effect to score display
+        const scoreDisplay = document.querySelector('.score-display');
+        if (scoreDisplay) {
+            scoreDisplay.addEventListener('mouseover', function() {
+                this.style.transform = 'scale(1.05)';
+            });
+            scoreDisplay.addEventListener('mouseout', function() {
+                this.style.transform = 'scale(1)';
+            });
         }
     </script>
 </body>
