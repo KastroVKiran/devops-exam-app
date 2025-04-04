@@ -1,16 +1,317 @@
-<!-- templates/exam.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DevOps Exam</title>
+    <title>DevOps Certification Exam</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #a5b4fc;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #f9fafb;
+            --card-bg: #ffffff;
+            --correct: #10b981;
+            --incorrect: #ef4444;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .exam-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .exam-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .exam-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .exam-subtitle {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .candidate-info {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .info-item i {
+            color: var(--primary);
+        }
+
+        .exam-form {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-box {
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            position: relative;
+        }
+
+        .question-box:last-child {
+            border-bottom: none;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0;
+        }
+
+        .question-number {
+            position: absolute;
+            left: -2.5rem;
+            top: 0;
+            background: var(--primary);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f9fafb;
+        }
+
+        .option-label:hover {
+            border-color: var(--primary-light);
+            background: #f0f5ff;
+        }
+
+        .option-radio {
+            margin-right: 1rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 1.2rem;
+            height: 1.2rem;
+            border: 2px solid #d1d5db;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .option-radio:checked {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+
+        .option-radio:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0.6rem;
+            height: 0.6rem;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+        }
+
+        .submit-btn i {
+            margin-left: 0.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .submit-btn:hover i {
+            transform: translateX(3px);
+        }
+
+        .timer-container {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .timer-warning {
+            background: var(--warning);
+        }
+
+        .timer-danger {
+            background: var(--danger);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .progress-container {
+            width: 100%;
+            background: #e5e7eb;
+            border-radius: 50px;
+            height: 8px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .time-up-alert {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--danger);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .time-up-alert.show {
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Welcome, {{ name }}!</h2>
-        <p>Please answer the following 15 questions:</p>
+    <div class="time-up-alert" id="time-up-alert">
+        <i class="fas fa-exclamation-triangle"></i> Time's up! Your exam is being submitted automatically.
+    </div>
 
-        <form action="/submit" method="POST">
+    <div class="exam-container">
+        <div class="exam-header">
+            <div class="exam-title">DevOps Professional Certification Exam</div>
+            <div class="exam-subtitle">Validate your DevOps knowledge and skills</div>
+            
+            <div class="timer-container" id="timer-container">
+                <i class="fas fa-clock"></i>
+                <span id="timer">15:00</span>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="candidate-info">
+            <div class="info-item">
+                <i class="fas fa-user"></i>
+                <span>Candidate: {{ name }}</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-envelope"></i>
+                <span>Email: {{ email }}</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-venus-mars"></i>
+                <span>Gender: {{ gender }}</span>
+            </div>
+        </div>
+
+        <form action="/submit" method="POST" id="exam-form">
             <!-- Pass hidden user info -->
             <input type="hidden" name="name" value="{{ name }}">
             <input type="hidden" name="gender" value="{{ gender }}">
@@ -18,17 +319,98 @@
 
             {% for q in questions %}
                 <div class="question-box">
-                    <p><b>Q{{ loop.index }}: {{ q['question'] }}</b></p>
-                    {% for opt in q['options'] %}
-                        <input type="radio" name="q{{ loop.index0 }}" value="{{ opt }}" required> {{ opt }}<br>
-                    {% endfor %}
+                    <div class="question-number">{{ loop.index }}</div>
+                    <div class="question-text">{{ q['question'] }}</div>
+                    <div class="options-container">
+                        {% for opt in q['options'] %}
+                            <label class="option-label">
+                                <input 
+                                    type="radio" 
+                                    name="q{{ loop.index0 }}" 
+                                    value="{{ opt }}" 
+                                    class="option-radio hidden"
+                                    required
+                                    data-question="{{ loop.index0 }}"
+                                    onchange="updateProgress()"
+                                >
+                                <span class="custom-radio"></span>
+                                {{ opt }}
+                            </label>
+                        {% endfor %}
+                    </div>
                     <input type="hidden" name="ans{{ loop.index0 }}" value="{{ q['answer'] }}">
                 </div>
-                <hr>
             {% endfor %}
 
-            <button type="submit" class="next-btn">Submit Exam</button>
+            <button type="submit" class="submit-btn">
+                Submit Exam <i class="fas fa-paper-plane"></i>
+            </button>
         </form>
     </div>
+
+    <script>
+        // Timer functionality - 15 minutes countdown
+        let timeLeft = 15 * 60; // 15 minutes in seconds
+        const timerElement = document.getElementById('timer');
+        const timerContainer = document.getElementById('timer-container');
+        const timeUpAlert = document.getElementById('time-up-alert');
+        
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Change color when time is running low
+            if (timeLeft <= 300) { // 5 minutes left
+                timerContainer.classList.add('timer-warning');
+            }
+            if (timeLeft <= 60) { // 1 minute left
+                timerContainer.classList.remove('timer-warning');
+                timerContainer.classList.add('timer-danger');
+            }
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                // Show time's up alert
+                timeUpAlert.classList.add('show');
+                // Disable all inputs
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.disabled = true;
+                });
+                // Submit the form after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('exam-form').submit();
+                }, 3000);
+            } else {
+                timeLeft--;
+            }
+        }
+        
+        const timerInterval = setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+        
+        // Progress bar functionality
+        function updateProgress() {
+            const totalQuestions = {{ questions|length }};
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progressPercent = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+        }
+        
+        // Initialize progress bar
+        updateProgress();
+        
+        // Ensure only one option can be selected per question
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const questionNum = this.getAttribute('data-question');
+                document.querySelectorAll(`input[data-question="${questionNum}"]`).forEach(otherRadio => {
+                    if (otherRadio !== this) {
+                        otherRadio.checked = false;
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
