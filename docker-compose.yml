@@ -1,7 +1,6 @@
-version: '3'
+version: '3.8'
 
 services:
-  # Flask Application
   flask:
     build: ./backend
     container_name: flask_app
@@ -9,14 +8,18 @@ services:
       - "5000:5000"
     environment:
       - FLASK_APP=app.py
-      - FLASK_ENV=development
+      - FLASK_ENV=production
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=rootpass
+      - MYSQL_DATABASE=devops_exam
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     volumes:
       - ./backend:/app
       - ./frontend:/app/templates
 
-  # MySQL Database
   mysql:
     image: mysql:5.7
     container_name: mysql_db
@@ -30,6 +33,10 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
 volumes:
   mysql_data:
