@@ -366,14 +366,14 @@
                     <div class="question-text">{{ q['question'] }}</div>
                     <div class="options-container">
                         {% for opt in q['options'] %}
-                            <label class="option-label" id="label-q{{ loop.index0 }}-{{ loop.index }}">
+                            <label class="option-label" id="label-q{{ loop.parentloop.index }}-{{ loop.index }}">
                                 <input 
                                     type="radio" 
-                                    name="q{{ loop.index0 }}" 
+                                    name="question_{{ loop.parentloop.index }}" 
                                     value="{{ opt }}" 
                                     class="option-radio hidden"
                                     required
-                                    data-question="{{ loop.index0 }}"
+                                    data-question="{{ loop.parentloop.index }}"
                                     data-option="{{ loop.index }}"
                                     onchange="updateProgress(this)"
                                 >
@@ -382,7 +382,7 @@
                             </label>
                         {% endfor %}
                     </div>
-                    <input type="hidden" name="ans{{ loop.index0 }}" value="{{ q['answer'] }}">
+                    <input type="hidden" name="correct_answer_{{ loop.index }}" value="{{ q['answer'] }}">
                 </div>
             {% endfor %}
 
@@ -454,18 +454,18 @@
                 // Remove 'selected' class from all options in this question
                 document.querySelectorAll(`input[data-question="${questionNum}"]`).forEach(radio => {
                     const label = document.getElementById(`label-q${questionNum}-${radio.getAttribute('data-option')}`);
-                    label.classList.remove('selected');
+                    if (label) label.classList.remove('selected');
                 });
                 
                 // Add 'selected' class to the chosen option
                 const selectedLabel = document.getElementById(`label-q${questionNum}-${optionNum}`);
-                selectedLabel.classList.add('selected');
+                if (selectedLabel) selectedLabel.classList.add('selected');
             }
             
             // Ensure only one option can be selected per question
             if (selectedRadio) {
                 const questionNum = selectedRadio.getAttribute('data-question');
-                document.querySelectorAll(`input[data-question="${questionNum}"]`).forEach(otherRadio => {
+                document.querySelectorAll(`input[name="question_${questionNum}"]`).forEach(otherRadio => {
                     if (otherRadio !== selectedRadio) {
                         otherRadio.checked = false;
                     }
