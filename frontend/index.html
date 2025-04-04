@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>User Information Card</title>
+  <title>User Information App</title>
   <style>
     body {
       margin: 0;
@@ -28,12 +28,38 @@
       font-weight: 700;
       text-align: center;
       margin-bottom: 2rem;
-      color: #333;
       border-bottom: 3px solid #6366f1;
       padding-bottom: 0.5rem;
       background: linear-gradient(to right, #6366f1, #4f46e5);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    input, select {
+      margin: 0.5rem 0;
+      padding: 0.75rem;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
     }
 
     .card {
@@ -44,6 +70,7 @@
       text-align: center;
       width: 100%;
       max-width: 400px;
+      margin-top: 1rem;
     }
 
     .info {
@@ -63,13 +90,48 @@
 </head>
 <body>
   <div class="container">
-    <div class="heading">User Information</div>
-    <div class="card">
-      <div class="info"><strong>Full Name:</strong> John Doe</div>
-      <div class="info"><strong>Gender:</strong> Male</div>
-      <div class="info"><strong>Email:</strong> johndoe@example.com</div>
+    <div class="heading">User Information App</div>
+    <form id="userForm">
+      <input type="text" id="name" placeholder="Full Name" required />
+      <select id="gender" required>
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="email" id="email" placeholder="Email ID" required />
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="output" class="card" style="display: none;">
+      <div class="info" id="displayName"></div>
+      <div class="info" id="displayGender"></div>
+      <div class="info" id="displayEmail"></div>
     </div>
   </div>
+
   <div class="footer">Developed by Kastro</div>
+
+  <script>
+    const form = document.getElementById('userForm');
+    const output = document.getElementById('output');
+    const nameDisplay = document.getElementById('displayName');
+    const genderDisplay = document.getElementById('displayGender');
+    const emailDisplay = document.getElementById('displayEmail');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const gender = document.getElementById('gender').value;
+      const email = document.getElementById('email').value;
+
+      nameDisplay.textContent = `Full Name: ${name}`;
+      genderDisplay.textContent = `Gender: ${gender}`;
+      emailDisplay.textContent = `Email: ${email}`;
+
+      output.style.display = 'block';
+    });
+  </script>
 </body>
 </html>
