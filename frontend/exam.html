@@ -17,6 +17,7 @@
             --incorrect: #ef4444;
             --warning: #f59e0b;
             --danger: #dc2626;
+            --selected: #e0e7ff;
         }
 
         body {
@@ -26,6 +27,7 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
+            padding-top: 180px; /* Space for sticky header */
         }
 
         .exam-container {
@@ -34,15 +36,30 @@
             padding: 2rem;
         }
 
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
         .exam-header {
             text-align: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 1rem;
         }
 
         .exam-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary);
             margin-bottom: 0.5rem;
@@ -50,7 +67,65 @@
 
         .exam-subtitle {
             color: var(--text-light);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .progress-timer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .timer-container {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .timer-warning {
+            background: var(--warning);
+        }
+
+        .timer-danger {
+            background: var(--danger);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            background: #e5e7eb;
+            border-radius: 50px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 0.5rem;
         }
 
         .candidate-info {
@@ -70,6 +145,7 @@
             align-items: center;
             gap: 0.5rem;
             color: var(--text-light);
+            font-size: 0.9rem;
         }
 
         .info-item i {
@@ -147,6 +223,11 @@
             background: #f0f5ff;
         }
 
+        .option-label.selected {
+            background: var(--selected);
+            border-color: var(--primary-light);
+        }
+
         .option-radio {
             margin-right: 1rem;
             -webkit-appearance: none;
@@ -209,49 +290,6 @@
             transform: translateX(3px);
         }
 
-        .timer-container {
-            background: var(--primary);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-        }
-
-        .timer-warning {
-            background: var(--warning);
-        }
-
-        .timer-danger {
-            background: var(--danger);
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .progress-container {
-            width: 100%;
-            background: #e5e7eb;
-            border-radius: 50px;
-            height: 8px;
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: var(--primary);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
         .hidden {
             display: none;
         }
@@ -281,21 +319,26 @@
         <i class="fas fa-exclamation-triangle"></i> Time's up! Your exam is being submitted automatically.
     </div>
 
-    <div class="exam-container">
-        <div class="exam-header">
-            <div class="exam-title">DevOps Professional Certification Exam</div>
-            <div class="exam-subtitle">Validate your DevOps knowledge and skills</div>
-            
-            <div class="timer-container" id="timer-container">
-                <i class="fas fa-clock"></i>
-                <span id="timer">15:00</span>
+    <div class="sticky-header">
+        <div class="header-content">
+            <div class="exam-header">
+                <div class="exam-title">DevOps Professional Certification Exam</div>
             </div>
             
-            <div class="progress-container">
-                <div class="progress-bar" id="progress-bar"></div>
+            <div class="progress-timer-container">
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="timer-container" id="timer-container">
+                    <i class="fas fa-clock"></i>
+                    <span id="timer">15:00</span>
+                </div>
             </div>
+            <div class="progress-text" id="progress-text">0 of {{ questions|length }} questions answered</div>
         </div>
+    </div>
 
+    <div class="exam-container">
         <div class="candidate-info">
             <div class="info-item">
                 <i class="fas fa-user"></i>
@@ -323,7 +366,7 @@
                     <div class="question-text">{{ q['question'] }}</div>
                     <div class="options-container">
                         {% for opt in q['options'] %}
-                            <label class="option-label">
+                            <label class="option-label" id="label-q{{ loop.index0 }}-{{ loop.index }}">
                                 <input 
                                     type="radio" 
                                     name="q{{ loop.index0 }}" 
@@ -331,7 +374,8 @@
                                     class="option-radio hidden"
                                     required
                                     data-question="{{ loop.index0 }}"
-                                    onchange="updateProgress()"
+                                    data-option="{{ loop.index }}"
+                                    onchange="updateProgress(this)"
                                 >
                                 <span class="custom-radio"></span>
                                 {{ opt }}
@@ -390,25 +434,57 @@
         updateTimer(); // Initial call
         
         // Progress bar functionality
-        function updateProgress() {
+        function updateProgress(selectedRadio) {
             const totalQuestions = {{ questions|length }};
             const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
             const progressPercent = (answeredQuestions / totalQuestions) * 100;
+            
+            // Update progress bar
             document.getElementById('progress-bar').style.width = `${progressPercent}%`;
-        }
-        
-        // Initialize progress bar
-        updateProgress();
-        
-        // Ensure only one option can be selected per question
-        document.querySelectorAll('input[type="radio"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const questionNum = this.getAttribute('data-question');
+            
+            // Update progress text
+            document.getElementById('progress-text').textContent = 
+                `${answeredQuestions} of ${totalQuestions} questions answered`;
+            
+            // Highlight selected option
+            if (selectedRadio) {
+                const questionNum = selectedRadio.getAttribute('data-question');
+                const optionNum = selectedRadio.getAttribute('data-option');
+                
+                // Remove 'selected' class from all options in this question
+                document.querySelectorAll(`input[data-question="${questionNum}"]`).forEach(radio => {
+                    const label = document.getElementById(`label-q${questionNum}-${radio.getAttribute('data-option')}`);
+                    label.classList.remove('selected');
+                });
+                
+                // Add 'selected' class to the chosen option
+                const selectedLabel = document.getElementById(`label-q${questionNum}-${optionNum}`);
+                selectedLabel.classList.add('selected');
+            }
+            
+            // Ensure only one option can be selected per question
+            if (selectedRadio) {
+                const questionNum = selectedRadio.getAttribute('data-question');
                 document.querySelectorAll(`input[data-question="${questionNum}"]`).forEach(otherRadio => {
-                    if (otherRadio !== this) {
+                    if (otherRadio !== selectedRadio) {
                         otherRadio.checked = false;
                     }
                 });
+            }
+        }
+        
+        // Initialize progress bar and selected answers
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            
+            // Highlight any previously selected answers
+            document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+                const questionNum = radio.getAttribute('data-question');
+                const optionNum = radio.getAttribute('data-option');
+                const label = document.getElementById(`label-q${questionNum}-${optionNum}`);
+                if (label) {
+                    label.classList.add('selected');
+                }
             });
         });
     </script>
