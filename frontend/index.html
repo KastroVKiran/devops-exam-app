@@ -2,123 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="DevOps, Certification, Mock Exam" />
-  <meta name="description" content="Register for the DevOps Mock Certification Exam" />
-  <title>DevOps Mock Certification Exam</title>
-
-  <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/x-icon">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Information Card</title>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background: #f9f9f9;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #f0f2f5, #e0e7ff);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    .exam-heading {
-      text-align: center;
-      margin-top: 80px;
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .heading {
       font-size: 2.5rem;
       font-weight: 700;
-      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #333;
+      border-bottom: 3px solid #6366f1;
+      padding-bottom: 0.5rem;
+      background: linear-gradient(to right, #6366f1, #4f46e5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    .register-box {
-      max-width: 500px;
-      margin: 40px auto;
-      background: #ffffff;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 30px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .register-box .form-group {
-      margin-bottom: 20px;
-    }
-
-    .btn-register {
+    .card {
+      background-color: white;
+      padding: 2rem 3rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      text-align: center;
       width: 100%;
-      padding: 12px;
-      font-weight: 600;
-      font-size: 1.1rem;
-      border-radius: 8px;
-      background-color: #2c3e50;
-      color: #fff;
-      transition: 0.3s ease-in-out;
+      max-width: 400px;
     }
 
-    .btn-register:hover {
-      background-color: #1abc9c;
+    .info {
+      font-size: 1.2rem;
+      margin: 1rem 0;
+      color: #1f2937;
     }
 
-    .input-group-text {
-      background-color: #f3f3f3;
-      border-right: 0;
-    }
-
-    .form-control {
-      border-left: 0;
-    }
-
-    @media (max-width: 576px) {
-      .exam-heading {
-        font-size: 2rem;
-      }
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 1rem;
+      background-color: #f3f4f6;
+      color: #6b7280;
     }
   </style>
 </head>
 <body>
-
-  <h1 class="exam-heading"><i class="fas fa-laptop-code mr-2"></i> DevOps Mock Certification Exam</h1>
-
-  <div class="register-box">
-    <form action="/start" method="POST">
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fas fa-user"></i></span>
-          </div>
-          <input type="text" name="name" class="form-control" placeholder="Your full name" required>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="gender">Gender</label>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
-          </div>
-          <select name="gender" class="form-control" required>
-            <option value="">Select Gender</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-          </div>
-          <input type="email" name="email" class="form-control" placeholder="example@domain.com" required>
-        </div>
-      </div>
-
-      <button type="submit" class="btn btn-register"><i class="fas fa-arrow-right"></i> Register & Start Exam</button>
-    </form>
+  <div class="container">
+    <div class="heading">User Information</div>
+    <div class="card">
+      <div class="info"><strong>Full Name:</strong> John Doe</div>
+      <div class="info"><strong>Gender:</strong> Male</div>
+      <div class="info"><strong>Email:</strong> johndoe@example.com</div>
+    </div>
   </div>
-
-  <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+  <div class="footer">Developed by Kastro</div>
 </body>
 </html>
