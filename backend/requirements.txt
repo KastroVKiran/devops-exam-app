@@ -1,2 +1,2 @@
 Flask==2.0.2
-Flask-MySQLdb==1.0.1
+mysql-connector-python==8.0.33
