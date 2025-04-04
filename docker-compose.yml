@@ -1,11 +1,9 @@
-# docker-compose.yml
-
 version: '3'
 
 services:
   # Flask Application
   flask:
-    build: .
+    build: ./backend
     container_name: flask_app
     ports:
       - "5000:5000"
@@ -14,20 +12,24 @@ services:
       - FLASK_ENV=development
     depends_on:
       - mysql
+    volumes:
+      - ./backend:/app
+      - ./frontend:/app/templates
 
   # MySQL Database
   mysql:
     image: mysql:5.7
     container_name: mysql_db
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: devops_exam
-      MYSQL_USER: user
-      MYSQL_PASSWORD: user_password
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpass
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   mysql_data:
