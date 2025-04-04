@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DevOps Certification Exam</title>
+    <title>DevOps Mock Certification Exam</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         body {
@@ -21,6 +21,7 @@
             justify-content: center;
             align-items: center;
             padding: 2rem;
+            animation: fadeIn 1s ease-in-out;
         }
 
         h1 {
@@ -33,12 +34,23 @@
             background: linear-gradient(to right, #6366f1, #4f46e5);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: fadeIn 1s ease-in-out;
+            animation: fadeInDown 1.2s ease-out;
         }
 
         @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
         }
 
         form {
@@ -51,6 +63,11 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             width: 100%;
             max-width: 400px;
+            transition: transform 0.3s ease;
+        }
+
+        form:hover {
+            transform: translateY(-5px);
         }
 
         label {
@@ -72,7 +89,8 @@
 
         input:focus, select:focus {
             outline: none;
-            box-shadow: 0 0 5px #6366f1;
+            box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+            border-color: #6366f1;
         }
 
         .next-btn {
@@ -85,6 +103,8 @@
             font-size: 1rem;
             cursor: pointer;
             transition: transform 0.2s ease, background-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .next-btn:hover {
@@ -92,20 +112,50 @@
             transform: scale(1.05);
         }
 
-        .banner {
-            width: 100%;
-            max-width: 500px;
-            height: auto;
-            margin-bottom: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        .next-btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -75%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                rgba(255, 255, 255, 0.3),
+                rgba(255, 255, 255, 0.6),
+                rgba(255, 255, 255, 0.3)
+            );
+            transform: skewX(-25deg);
+        }
+
+        .next-btn:hover::after {
+            animation: shine 0.8s forwards;
+        }
+
+        @keyframes shine {
+            100% {
+                left: 125%;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: #555;
+            background-color: #f3f4f6;
+            animation: fadeIn 1.2s ease-in;
+        }
+
+        .footer i {
+            color: #6366f1;
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>DevOps Certification Exam</h1>
-        <img src="{{ url_for('static', filename='devops-banner.jpg') }}" class="banner" alt="DevOps Banner">
+        <h1>DevOps Mock Certification Exam</h1>
         
         <form action="/start" method="POST">
             <label>Name:</label>
@@ -124,6 +174,10 @@
 
             <button type="submit" class="next-btn">Next →</button>
         </form>
+    </div>
+
+    <div class="footer">
+        <i>⚙️</i> Developed by <strong>KASTRO</strong>
     </div>
 </body>
 </html>
