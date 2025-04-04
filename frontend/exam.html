@@ -27,7 +27,7 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            padding-top: 180px; /* Space for sticky header */
+            padding-top: 180px;
         }
 
         .exam-container {
@@ -355,7 +355,6 @@
         </div>
 
         <form action="/submit" method="POST" id="exam-form">
-            <!-- Pass hidden user info -->
             <input type="hidden" name="name" value="{{ name }}">
             <input type="hidden" name="gender" value="{{ gender }}">
             <input type="hidden" name="email" value="{{ email }}">
@@ -369,11 +368,11 @@
                             <label class="option-label" id="label-q{{ loop.parentloop.index }}-{{ loop.index }}">
                                 <input 
                                     type="radio" 
-                                    name="question_{{ loop.parentloop.index }}" 
+                                    name="q{{ loop.index0 }}" 
                                     value="{{ opt }}" 
                                     class="option-radio hidden"
                                     required
-                                    data-question="{{ loop.parentloop.index }}"
+                                    data-question="{{ loop.index0 }}"
                                     data-option="{{ loop.index }}"
                                     onchange="updateProgress(this)"
                                 >
@@ -382,7 +381,7 @@
                             </label>
                         {% endfor %}
                     </div>
-                    <input type="hidden" name="correct_answer_{{ loop.index }}" value="{{ q['answer'] }}">
+                    <input type="hidden" name="ans{{ loop.index0 }}" value="{{ q['answer'] }}">
                 </div>
             {% endfor %}
 
@@ -393,8 +392,7 @@
     </div>
 
     <script>
-        // Timer functionality - 15 minutes countdown
-        let timeLeft = 15 * 60; // 15 minutes in seconds
+        let timeLeft = 15 * 60;
         const timerElement = document.getElementById('timer');
         const timerContainer = document.getElementById('timer-container');
         const timeUpAlert = document.getElementById('time-up-alert');
@@ -404,24 +402,20 @@
             const seconds = timeLeft % 60;
             timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             
-            // Change color when time is running low
-            if (timeLeft <= 300) { // 5 minutes left
+            if (timeLeft <= 300) {
                 timerContainer.classList.add('timer-warning');
             }
-            if (timeLeft <= 60) { // 1 minute left
+            if (timeLeft <= 60) {
                 timerContainer.classList.remove('timer-warning');
                 timerContainer.classList.add('timer-danger');
             }
             
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                // Show time's up alert
                 timeUpAlert.classList.add('show');
-                // Disable all inputs
                 document.querySelectorAll('input[type="radio"]').forEach(radio => {
                     radio.disabled = true;
                 });
-                // Submit the form after 3 seconds
                 setTimeout(() => {
                     document.getElementById('exam-form').submit();
                 }, 3000);
@@ -431,41 +425,33 @@
         }
         
         const timerInterval = setInterval(updateTimer, 1000);
-        updateTimer(); // Initial call
+        updateTimer();
         
-        // Progress bar functionality
         function updateProgress(selectedRadio) {
             const totalQuestions = {{ questions|length }};
             const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
             const progressPercent = (answeredQuestions / totalQuestions) * 100;
             
-            // Update progress bar
             document.getElementById('progress-bar').style.width = `${progressPercent}%`;
-            
-            // Update progress text
             document.getElementById('progress-text').textContent = 
                 `${answeredQuestions} of ${totalQuestions} questions answered`;
             
-            // Highlight selected option
             if (selectedRadio) {
                 const questionNum = selectedRadio.getAttribute('data-question');
                 const optionNum = selectedRadio.getAttribute('data-option');
                 
-                // Remove 'selected' class from all options in this question
                 document.querySelectorAll(`input[data-question="${questionNum}"]`).forEach(radio => {
                     const label = document.getElementById(`label-q${questionNum}-${radio.getAttribute('data-option')}`);
                     if (label) label.classList.remove('selected');
                 });
                 
-                // Add 'selected' class to the chosen option
                 const selectedLabel = document.getElementById(`label-q${questionNum}-${optionNum}`);
                 if (selectedLabel) selectedLabel.classList.add('selected');
             }
             
-            // Ensure only one option can be selected per question
             if (selectedRadio) {
                 const questionNum = selectedRadio.getAttribute('data-question');
-                document.querySelectorAll(`input[name="question_${questionNum}"]`).forEach(otherRadio => {
+                document.querySelectorAll(`input[name="q${questionNum}"]`).forEach(otherRadio => {
                     if (otherRadio !== selectedRadio) {
                         otherRadio.checked = false;
                     }
@@ -473,11 +459,9 @@
             }
         }
         
-        // Initialize progress bar and selected answers
         document.addEventListener('DOMContentLoaded', function() {
             updateProgress();
             
-            // Highlight any previously selected answers
             document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
                 const questionNum = radio.getAttribute('data-question');
                 const optionNum = radio.getAttribute('data-option');
