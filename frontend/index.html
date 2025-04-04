@@ -152,34 +152,30 @@
       const gender = document.getElementById('gender').value;
       const email = document.getElementById('email').value;
 
-      // Show the info card
       nameDisplay.textContent = `Full Name: ${name}`;
       genderDisplay.textContent = `Gender: ${gender}`;
       emailDisplay.textContent = `Email: ${email}`;
+
       output.classList.add("show");
 
-      // Send data to backend
+      // Save user data (optional)
+      sessionStorage.setItem('userData', JSON.stringify({ name, gender, email }));
+
+      // Fetch questions from backend
       try {
-        const res = await fetch('http://localhost:5000/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, gender, email })
-        });
+        const response = await fetch('http://localhost:5000/api/questions'); // Adjust if hosted elsewhere
+        const data = await response.json();
 
-        if (!res.ok) {
-          alert('Failed to register. Please try again.');
-          return;
-        }
+        sessionStorage.setItem('questions', JSON.stringify(data));
+
+        setTimeout(() => {
+          window.location.href = 'questions.html';
+        }, 2000);
+
       } catch (error) {
-        console.error(error);
-        alert('Server error. Please check your backend.');
-        return;
+        alert("Failed to load questions. Please try again.");
+        console.error("Error fetching questions:", error);
       }
-
-      // Redirect to questions page after 2 seconds
-      setTimeout(() => {
-        window.location.href = 'questions.html';
-      }, 2000);
     });
   </script>
 </body>
