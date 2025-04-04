@@ -1,198 +1,34 @@
+<!-- templates/exam.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DevOps Certification Exam</title>
+    <title>DevOps Exam</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* [All your existing CSS styles remain exactly the same] */
-        :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
-            --primary-light: #a5b4fc;
-            --text: #1f2937;
-            --text-light: #6b7280;
-            --bg: #f9fafb;
-            --card-bg: #ffffff;
-            --correct: #10b981;
-            --incorrect: #ef4444;
-            --warning: #f59e0b;
-            --danger: #dc2626;
-            --selected: #e0e7ff;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            padding-top: 180px;
-        }
-        
-        /* [Rest of your CSS styles remain exactly the same] */
-    </style>
 </head>
 <body>
-    <div class="time-up-alert" id="time-up-alert">
-        <i class="fas fa-exclamation-triangle"></i> Time's up! Your exam is being submitted automatically.
-    </div>
+    <div class="container">
+        <h2>Welcome, {{ name }}!</h2>
+        <p>Please answer the following 15 questions:</p>
 
-    <div class="sticky-header">
-        <div class="header-content">
-            <div class="exam-header">
-                <div class="exam-title">DevOps Professional Certification Exam</div>
-            </div>
-            
-            <div class="progress-timer-container">
-                <div class="progress-container">
-                    <div class="progress-bar" id="progress-bar"></div>
-                </div>
-                <div class="timer-container" id="timer-container">
-                    <i class="fas fa-clock"></i>
-                    <span id="timer">15:00</span>
-                </div>
-            </div>
-            <div class="progress-text" id="progress-text">0 of {{ questions|length }} questions answered</div>
-        </div>
-    </div>
-
-    <div class="exam-container">
-        <div class="candidate-info">
-            <div class="info-item">
-                <i class="fas fa-user"></i>
-                <span>Candidate: {{ name }}</span>
-            </div>
-            <div class="info-item">
-                <i class="fas fa-envelope"></i>
-                <span>Email: {{ email }}</span>
-            </div>
-            <div class="info-item">
-                <i class="fas fa-venus-mars"></i>
-                <span>Gender: {{ gender }}</span>
-            </div>
-        </div>
-
-        <!-- UPDATED FORM SECTION -->
-        <form action="/submit" method="POST" id="exam-form">
+        <form action="/submit" method="POST">
+            <!-- Pass hidden user info -->
             <input type="hidden" name="name" value="{{ name }}">
             <input type="hidden" name="gender" value="{{ gender }}">
             <input type="hidden" name="email" value="{{ email }}">
 
             {% for q in questions %}
                 <div class="question-box">
-                    <div class="question-number">{{ loop.index }}</div>
-                    <div class="question-text">{{ q['question'] }}</div>
-                    <div class="options-container">
-                        {% for opt in q['options'] %}
-                            <label class="option-label" id="label-q{{ loop.parentloop.index }}-{{ loop.index }}">
-                                <input 
-                                    type="radio" 
-                                    name="q{{ loop.index0 }}" 
-                                    value="{{ opt }}" 
-                                    class="option-radio hidden"
-                                    required
-                                    data-question="{{ loop.index0 }}"
-                                    data-option="{{ loop.index }}"
-                                    onchange="updateProgress(this)"
-                                >
-                                <span class="custom-radio"></span>
-                                {{ opt }}
-                            </label>
-                        {% endfor %}
-                    </div>
+                    <p><b>Q{{ loop.index }}: {{ q['question'] }}</b></p>
+                    {% for opt in q['options'] %}
+                        <input type="radio" name="q{{ loop.index0 }}" value="{{ opt }}" required> {{ opt }}<br>
+                    {% endfor %}
                     <input type="hidden" name="ans{{ loop.index0 }}" value="{{ q['answer'] }}">
                 </div>
+                <hr>
             {% endfor %}
 
-            <button type="submit" class="submit-btn">
-                Submit Exam <i class="fas fa-paper-plane"></i>
-            </button>
+            <button type="submit" class="next-btn">Submit Exam</button>
         </form>
     </div>
-
-    <script>
-        // Timer functionality - 15 minutes countdown
-        let timeLeft = 15 * 60;
-        const timerElement = document.getElementById('timer');
-        const timerContainer = document.getElementById('timer-container');
-        const timeUpAlert = document.getElementById('time-up-alert');
-        
-        function updateTimer() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            
-            if (timeLeft <= 300) {
-                timerContainer.classList.add('timer-warning');
-            }
-            if (timeLeft <= 60) {
-                timerContainer.classList.remove('timer-warning');
-                timerContainer.classList.add('timer-danger');
-            }
-            
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                timeUpAlert.classList.add('show');
-                document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                    radio.disabled = true;
-                });
-                setTimeout(() => {
-                    document.getElementById('exam-form').submit();
-                }, 3000);
-            } else {
-                timeLeft--;
-            }
-        }
-        
-        const timerInterval = setInterval(updateTimer, 1000);
-        updateTimer();
-        
-        function updateProgress(selectedRadio) {
-            const totalQuestions = {{ questions|length }};
-            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
-            const progressPercent = (answeredQuestions / totalQuestions) * 100;
-            
-            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
-            document.getElementById('progress-text').textContent = 
-                `${answeredQuestions} of ${totalQuestions} questions answered`;
-            
-            if (selectedRadio) {
-                const questionNum = selectedRadio.getAttribute('data-question');
-                const optionNum = selectedRadio.getAttribute('data-option');
-                
-                document.querySelectorAll(`input[data-question="${questionNum}"]`).forEach(radio => {
-                    const label = document.getElementById(`label-q${questionNum}-${radio.getAttribute('data-option')}`);
-                    if (label) label.classList.remove('selected');
-                });
-                
-                const selectedLabel = document.getElementById(`label-q${questionNum}-${optionNum}`);
-                if (selectedLabel) selectedLabel.classList.add('selected');
-            }
-            
-            if (selectedRadio) {
-                const questionNum = selectedRadio.getAttribute('data-question');
-                document.querySelectorAll(`input[name="q${questionNum}"]`).forEach(otherRadio => {
-                    if (otherRadio !== selectedRadio) {
-                        otherRadio.checked = false;
-                    }
-                });
-            }
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            updateProgress();
-            
-            document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
-                const questionNum = radio.getAttribute('data-question');
-                const optionNum = radio.getAttribute('data-option');
-                const label = document.getElementById(`label-q${questionNum}-${optionNum}`);
-                if (label) {
-                    label.classList.add('selected');
-                }
-            });
-        });
-    </script>
 </body>
 </html>
