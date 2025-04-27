@@ -85,6 +85,7 @@ jobs:
             ignore-unchanged: true
             only-fixed: true
             organization: sivabalan2510
+            image: devopsexamapp:latest
 
 
 
