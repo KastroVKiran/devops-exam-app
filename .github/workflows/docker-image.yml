@@ -4,7 +4,6 @@ on:
   push:
     branches: [ "master" ]
 
-
 jobs:
 
   git_checkout_trivy_scan:
