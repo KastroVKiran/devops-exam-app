@@ -78,33 +78,35 @@ jobs:
   Deploy_with_docker_compose:
 
     runs-on: self-hosted
-    needs:  Docker_image_build_dockerScout
+    needs: Docker_image_build_dockerScout
 
-    steps: 
-      - uses: actions/checkout@v4.2.2
+    steps:
+    - uses: actions/checkout@v4.2.2
 
-      - name: Run docker compose
-        uses: hoverkraft-tech/compose-action@v2.0.1
-      
-        with:
-          run: docker compose down --remove-orphans || true 
-          compose-file: "./docker-compose.yml"
-      
-      - run: |
-          echo "Waiting for MySQL to be ready..."
-                timeout 120s bash -c '
-                while ! docker compose exec -T mysql mysqladmin ping -uroot -prootpass --silent;
-                do 
-                    sleep 5;
-                    docker compose logs mysql --tail=5 || true;
-                done'
+    - name: Docker Compose Down (Clean old containers) 
+      run: docker compose down --remove-orphans || true
 
-                sleep 10
-          
-          echo "=== Container Status ==="
-          docker compose ps -a
-          echo "=== Testing Flask Endpoint ==="
-          curl -I http://localhost:5000 || true
+    - name: Docker Compose Up (Run in background)
+      run: docker compose up -d
+
+    - name: Wait for MySQL to be Ready
+      run: |
+        echo "Waiting for MySQL to be ready..."
+        timeout 120s bash -c '
+          while ! docker compose exec -T mysql mysqladmin ping -uroot -prootpass --silent;
+          do 
+            sleep 5;
+            docker compose logs mysql --tail=5 || true;
+          done
+        '
+
+    - name: Test Flask Endpoint
+      run: |
+        sleep 10
+        echo "=== Container Status ==="
+        docker compose ps -a
+        echo "=== Testing Flask Endpoint ==="
+        curl -I http://localhost:5000 || true
 
             
 
