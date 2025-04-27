@@ -30,12 +30,13 @@ jobs:
         SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
     - uses: SonarSource/sonarqube-scan-action@v5.1.0 
       with:
-         args: >
-           -Dsonar.projectName=devops-exam-app
-           -Dsonar.projectKey=devops-exam-app
-           -Dsonar.sources=. 
-           -Dsonar.language=py 
-           -Dsonar.python.version=3 
+        args: >
+          -Dsonar.projectKey=devops-exam-app
+          -Dsonar.projectName=devops-exam-app
+          -Dsonar.sources=.
+          -Dsonar.language=py
+          -Dsonar.python.version=3
+          -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
            
 
 
