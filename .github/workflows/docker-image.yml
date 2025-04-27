@@ -76,14 +76,14 @@ jobs:
             only-fixed: true
 
   Deploy_with_docker_compose:
-    
+
     runs-on: self-hosted
     needs: Docker_image_build_dockerScout
 
     steps:
     - uses: actions/checkout@v4.2.2
 
-    - name: Docker Compose Down (Clean old containers)
+    - name: Docker Compose Down (Clean old containers) 
       run: docker compose down --remove-orphans || true
 
     - name: Docker Compose Up (Run in background)
