@@ -84,6 +84,7 @@ jobs:
             ignore-base: true
             ignore-unchanged: true
             only-fixed: true
+            organization: ${{ vars.DOCKER_USERNAME }}
 
 
 
