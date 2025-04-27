@@ -69,10 +69,15 @@ jobs:
     needs: Docker_image_build
 
     steps:
-      - uses: docker/scout-action@v1
-      - run: docker-scout quickview sivabalan2510/devopsexamapp:latest
-      - run: docker-scout cves sivabalan2510/devopsexamapp:latest
-      - run: docker-scout recommendations sivabalan2510/devopsexamapp:latest
+      - name: Docker Scout
+        id: docker-scout
+        uses: docker/scout-action@v1
+        with:
+            command: cves,recommendations,compare
+            to-latest: true
+            ignore-base: true
+            ignore-unchanged: true
+            only-fixed: true
 
 
 
