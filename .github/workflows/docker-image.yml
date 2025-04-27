@@ -26,17 +26,17 @@ jobs:
     
     - uses: SonarSource/sonarqube-scan-action@v5.1.0 
       env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
         SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
     - uses: SonarSource/sonarqube-scan-action@v5.1.0 
       with:
          args: >
            -Dsonar.projectName=devops-exam-app
            -Dsonar.projectKey=devops-exam-app
-           -Dsonar.sources=. /
-           -Dsonar.language=py /
-           -Dsonar.python.version=3 /
-           -Dsonar.host.url=http://localhost:9000
+           -Dsonar.sources=. 
+           -Dsonar.language=py 
+           -Dsonar.python.version=3 
+           
 
 
   Docker_image_build:
