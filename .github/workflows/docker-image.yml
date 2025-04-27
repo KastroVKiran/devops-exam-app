@@ -62,7 +62,7 @@ jobs:
           context: .
           push: true
           tags: sivabalan2510/devopsexamapp:latest
-          file: .backend/Dockerfile
+          file: backend/Dockerfile
  
   Docker_scout:
     runs-on: self-hosted
