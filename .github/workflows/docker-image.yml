@@ -13,8 +13,8 @@ jobs:
     steps:
     - name: Fix workspace permissions
       run: |
-        sudo chown -R ubuntu:ubuntu /home/ubuntu/_work || true
-        sudo rm -rf /home/ubuntu/_work/devops-exam-app/devops-exam-app || true
+        sudo chown -R ubuntu:ubuntu /home/ubuntu/_work/devops-exam-app/devops-exam-app || true
+        sudo find /home/ubuntu/_work/devops-exam-app/devops-exam-app -mindepth 1 -delete || true
     - uses: actions/checkout@v4
     - name: File System Scan
       run: trivy fs --security-checks vuln,config --format table -o trivy-fs-report.html .
