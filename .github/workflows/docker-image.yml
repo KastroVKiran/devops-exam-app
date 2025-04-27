@@ -63,7 +63,7 @@ jobs:
           push: true
           tags: sivabalan2510/devopsexamapp:latest
           file: backend/Dockerfile
-          
+
 
       - name: Docker Scout
         id: docker-scout
@@ -74,6 +74,38 @@ jobs:
             ignore-base: true
             ignore-unchanged: true
             only-fixed: true
+
+  Deploy_with_docker_compose:
+
+    runs-on: self-hosted
+    needs:  Docker_image_build_dockerScout
+
+    steps: 
+      - uses: actions/checkout@v4.2.2
+
+      - name: Run docker compose
+        uses: hoverkraft-tech/compose-action@v2.0.1
+      
+        with:
+          run: docker compose down --remove-orphans || true 
+          compose-file: "./docker-compose.yml"
+      
+      - run: |
+          echo "Waiting for MySQL to be ready..."
+                timeout 120s bash -c '
+                while ! docker compose exec -T mysql mysqladmin ping -uroot -prootpass --silent;
+                do 
+                    sleep 5;
+                    docker compose logs mysql --tail=5 || true;
+                done'
+
+                sleep 10
+          
+          echo "=== Container Status ==="
+          docker compose ps -a
+          echo "=== Testing Flask Endpoint ==="
+          curl -I http://localhost:5000 || true
+
             
 
 
