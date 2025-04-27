@@ -74,7 +74,7 @@ jobs:
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          
+
       - name: Docker Scout
         id: docker-scout
         uses: docker/scout-action@v1
@@ -84,8 +84,7 @@ jobs:
             ignore-base: true
             ignore-unchanged: true
             only-fixed: true
-            organization: ${{ vars.DOCKER_USERNAME }}
-
+            organization: sivabalan2510
 
 
 
