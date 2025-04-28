@@ -1,14 +1,13 @@
 FROM python:3.10-slim
 
+# Set working directory
 WORKDIR /app
 
 # Install Python dependencies
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend application files (everything inside backend)
+# Copy application files and templates folder
 COPY . .
-
-EXPOSE 5000
 
 CMD ["python", "app.py"]
