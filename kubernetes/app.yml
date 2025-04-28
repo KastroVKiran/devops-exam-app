@@ -17,12 +17,19 @@ spec:
      containers:
      - name: app
        image: sivabalan2510/devopsexamapp:latest
-       env:
-         FLASK_APP=app.py
-         FLASK_ENV=production
-         MYSQL_HOST=mysql
-         MYSQL_USER=root
-         MYSQL_PASSWORD=rootpass
-         MYSQL_DATABASE=devops_exam
+       
        ports:
-       - containerPort: 5000
+        - containerPort: 5000
+       env:
+        - name: FLASK_APP
+          value: "app.py"
+        - name: FLASK_ENV
+          value: "production"
+        - name: MYSQL_HOST
+          value: "mysql"
+        - name: MYSQL_USER
+          value: "root"
+        - name: MYSQL_PASSWORD
+          value: "rootpass"
+        - name: MYSQL_DATABASE
+          value: "devops_exam"
