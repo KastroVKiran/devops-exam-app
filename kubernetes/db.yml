@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      service: mysql
+  replicas: 1
+  serviceName: mysql
+  template:
+    metadata:
+      labels:
+        service: mysql
+    spec:
+     containers:
+        - name: mysqldb
+          image: mysql:5.7
+          imagePullPolicy: Always
+          env:
+            MYSQL_ROOT_PASSWORD: rootpass
+            MYSQL_DATABASE: devops_exam
+          ports:
+            - containerPort: 3306
