@@ -17,12 +17,12 @@ spec:
      containers:
      - name: app
        image: sivabalan2510/devopsexamapp:latest
-       
+
        ports:
         - containerPort: 5000
        env:
         - name: FLASK_APP
-          value: "app.py"
+          value: "/src/app.py"
         - name: FLASK_ENV
           value: "production"
         - name: MYSQL_HOST
