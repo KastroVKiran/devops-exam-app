@@ -2,7 +2,7 @@ name: DevOps-exam-CI
 
 on:
   push:
-    branches: [ "test" ]
+    branches: [ "master" ]
 
 jobs:
 
