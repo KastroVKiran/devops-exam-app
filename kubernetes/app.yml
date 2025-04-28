@@ -22,7 +22,7 @@ spec:
         - containerPort: 5000
        env:
         - name: FLASK_APP
-          value: "/src/app.py"
+          value: "/backend/app.py"
         - name: FLASK_ENV
           value: "production"
         - name: MYSQL_HOST
