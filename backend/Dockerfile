@@ -1,13 +1,12 @@
-FROM python:3.10-slim
+# backend/Dockerfile
 
-# Set working directory
+FROM python:3.9-slim
+
 WORKDIR /app
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
-# Copy application files and templates folder
 COPY . .
 
-CMD ["python", "app.py"]
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
