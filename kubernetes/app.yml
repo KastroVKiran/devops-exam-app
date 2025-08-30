@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: app-deployment
+ labels:
+   app: app
+spec:
+ replicas: 2
+ selector:
+   matchLabels:
+     app: app
+ template:
+   metadata:
+     labels:
+       app: app
+   spec:
+     containers:
+     - name: app
+       image: sivabalan2510/devopsexamapp:latest
+
+       ports:
+        - containerPort: 5000
+       env:
+        - name: FLASK_APP
+          value: "/backend/app.py"
+        - name: FLASK_ENV
+          value: "production"
+        - name: MYSQL_HOST
+          value: "mysql"
+        - name: MYSQL_USER
+          value: "root"
+        - name: MYSQL_PASSWORD
+          value: "rootpass"
+        - name: MYSQL_DATABASE
+          value: "devops_exam"
